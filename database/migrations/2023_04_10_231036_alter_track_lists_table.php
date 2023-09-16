@@ -13,9 +13,6 @@ return new class extends Migration
     {
         Schema::table('track_lists', function (Blueprint $table) {
             $table->string('city')->nullable();
-            $table->dateTime('to_city')->nullable();
-            $table->boolean('reg_city')->default(0);
-            $table->dateTime('to_client_city')->nullable();
         });
     }
 
@@ -25,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('track_lists', function (Blueprint $table) {
-            $table->dropColumn(['city','to_city', 'reg_city', 'to_client_city']);
+            $table->dropColumn(['city']);
         });
     }
 };
