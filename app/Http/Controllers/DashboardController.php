@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use App\Models\ClientTrackList;
 use App\Models\Configuration;
 use App\Models\Message;
@@ -17,7 +18,7 @@ class DashboardController extends Controller
     {
         $qr = QrCodes::query()->select()->where('id', 1)->first();
         $qrChina = QrCodes::query()->select()->where('id', 2)->first();
-
+        $cities = City::query()->select('title')->get();
         if (Auth::user()->is_active === 1 && Auth::user()->type === null){
             $tracks = ClientTrackList::query()
                 ->leftJoin('track_lists', 'client_track_lists.track_code', '=', 'track_lists.track_code')
@@ -48,7 +49,7 @@ class DashboardController extends Controller
         }elseif (Auth::user()->is_active === 1 && Auth::user()->type === 'othercity'){
             $config = Configuration::query()->select('address', 'title_text', 'address_two')->first();
             $count = TrackList::query()->whereDate('to_client', Carbon::today())->count();
-            return view('othercity')->with(compact('count', 'config', 'qr'));
+            return view('othercity')->with(compact('count', 'config', 'qr', 'cities'));
         }elseif (Auth::user()->is_active === 1 && Auth::user()->type === 'admin' || Auth::user()->is_active === 1 && Auth::user()->type === 'moderator'){
             $messages = Message::all();
             $config = Configuration::query()->select('address')->first();
